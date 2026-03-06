@@ -1,0 +1,2 @@
+workflow: ./workflow.ts
+secrets-path: ./secrets.yaml

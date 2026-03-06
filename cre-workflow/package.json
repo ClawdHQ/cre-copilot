@@ -1,0 +1,16 @@
+{
+  "name": "cre-workflow",
+  "version": "1.0.0",
+  "description": "CRE workflow for AI-assisted workflow generation",
+  "main": "workflow.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@chainlink/cre-sdk": "^1.1.2",
+    "viem": "^2.46.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
