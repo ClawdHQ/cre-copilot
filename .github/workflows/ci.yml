@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Root compile + test
+        run: npm run ci:root
+
+      - name: Backend build
+        run: npm run ci:backend
+
+      - name: Frontend build
+        run: npm run ci:frontend
+
+      - name: CRE workflow build
+        run: npm run ci:workflow
