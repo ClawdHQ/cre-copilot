@@ -1,0 +1,7 @@
+{
+  "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",
+  "OPENROUTER_API_KEY": "YOUR_OPENROUTER_API_KEY",
+  "BACKEND_URL": "http://localhost:3001",
+  "WORKFLOW_LOG_ADDRESS": "0xYourWorkflowLogContractAddress",
+  "CI_DRY_MODE": "false"
+}
