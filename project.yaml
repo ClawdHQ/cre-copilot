@@ -1,0 +1,10 @@
+staging-settings:
+  workflows:
+    - name: "generator-workflow"
+      workflow-artifacts:
+        workflow-path: "./cre-workflow/workflow.ts"
+        config-path: "./cre-workflow/config.json"
+        secrets-path: "./cre-workflow/secrets.yaml"
+  rpcs:
+    - chain-name: ethereum-testnet-sepolia
+      url: "https://eth-sepolia.g.alchemy.com/v2/3MMaXlOkQyjVCCW1HNbY67u_BlkXI3Ff"

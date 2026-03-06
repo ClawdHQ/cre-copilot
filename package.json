@@ -1,0 +1,30 @@
+{
+  "name": "cre-copilot",
+  "version": "1.0.0",
+  "description": "AI-Assisted CRE Workflow Generator",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.ts --network sepolia",
+    "test": "npx hardhat test",
+    "ci:root": "npm run compile && npm run test",
+    "ci:backend": "npm --prefix backend install --no-audit --no-fund && npm --prefix backend run build",
+    "ci:frontend": "npm --prefix frontend install --no-audit --no-fund && npm --prefix frontend run build",
+    "ci:workflow": "npm --prefix cre-workflow install --no-audit --no-fund && npm --prefix cre-workflow run build",
+    "ci:cre-dry": "npm --prefix backend install --no-audit --no-fund && CRE_SIM_MODE=mock npm --prefix backend run ci:dry-sim",
+    "ci:all": "npm run ci:root && npm run ci:backend && npm run ci:frontend && npm run ci:workflow && npm run ci:cre-dry",
+    "cre:simulate:dry": "CRE_SIM_MODE=mock npm --prefix backend run ci:dry-sim",
+    "cre:simulate:full": "./cre-cli workflow simulate ./cre-workflow --target staging-settings --http-payload '{\"description\":\"CI full CRE simulation\",\"generatorAddress\":\"0x0000000000000000000000000000000000000000\"}' --non-interactive --trigger-index 0 -e .env"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "hardhat": "^2.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
+    "dotenv": "^16.4.0",
+    "ethers": "^6.11.0"
+  }
+}
