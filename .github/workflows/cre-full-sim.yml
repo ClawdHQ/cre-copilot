@@ -1,0 +1,84 @@
+name: CRE Full Simulation (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      description:
+        description: "Simulation description payload"
+        required: false
+        default: "Manual CI full CRE simulation"
+      generatorAddress:
+        description: "Generator wallet address"
+        required: false
+        default: "0x0000000000000000000000000000000000000000"
+
+jobs:
+  full-sim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      WORKFLOW_LOG_ADDRESS: ${{ secrets.WORKFLOW_LOG_ADDRESS }}
+      BACKEND_URL: http://localhost:3001
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install backend deps
+        run: npm --prefix backend install --no-audit --no-fund
+
+      - name: Start backend
+        run: npm --prefix backend run dev &
+
+      - name: Wait for backend startup
+        run: sleep 8
+
+      - name: Write runtime config
+        run: |
+          cat > cre-workflow/config.json <<JSON
+          {
+            "OPENROUTER_API_KEY": "${OPENROUTER_API_KEY}",
+            "BACKEND_URL": "${BACKEND_URL}",
+            "WORKFLOW_LOG_ADDRESS": "${WORKFLOW_LOG_ADDRESS}",
+            "CI_DRY_MODE": "false"
+          }
+          JSON
+
+      - name: Validate required secrets
+        run: |
+          [[ -n "${OPENROUTER_API_KEY}" ]] || (echo "Missing OPENROUTER_API_KEY" && exit 1)
+          [[ -n "${SEPOLIA_RPC_URL}" ]] || (echo "Missing SEPOLIA_RPC_URL" && exit 1)
+          [[ -n "${PRIVATE_KEY}" ]] || (echo "Missing PRIVATE_KEY" && exit 1)
+          [[ -n "${WORKFLOW_LOG_ADDRESS}" ]] || (echo "Missing WORKFLOW_LOG_ADDRESS" && exit 1)
+
+      - name: Verify cre-cli availability
+        run: |
+          if [[ -x "./cre-cli" ]]; then
+            echo "Using local ./cre-cli"
+          else
+            echo "cre-cli binary not found or not executable at repo root." >&2
+            echo "Upload a Linux-compatible cre-cli binary or extend this job with an installer." >&2
+            exit 1
+          fi
+
+      - name: Run full CRE simulation
+        run: |
+          ./cre-cli workflow simulate ./cre-workflow \
+            --target staging-settings \
+            --http-payload "{\"description\":\"${{ inputs.description }}\",\"generatorAddress\":\"${{ inputs.generatorAddress }}\"}" \
+            --non-interactive \
+            --trigger-index 0 \
+            --broadcast \
+            -e .env
