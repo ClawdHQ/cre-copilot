@@ -1,0 +1,29 @@
+name: CRE Dry Simulation
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  dry-sim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Run deterministic dry CRE simulation
+        env:
+          CRE_SIM_MODE: mock
+        run: npm run ci:cre-dry
