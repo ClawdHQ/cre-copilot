@@ -13,3 +13,7 @@ typechain-types/
 coverage/
 cre-workflow/config.local.json
 cre-workflow/secrets.local.yaml
+cre-workflow/.cre_build_tmp.js
+cre-workflow/tmp.js
+cre-workflow/tmp.wasm
+cre_darwin_arm64.zip
