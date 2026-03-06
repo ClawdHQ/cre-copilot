@@ -17,3 +17,4 @@ cre-workflow/.cre_build_tmp.js
 cre-workflow/tmp.js
 cre-workflow/tmp.wasm
 cre_darwin_arm64.zip
+cre-cli
