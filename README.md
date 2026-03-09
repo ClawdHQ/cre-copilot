@@ -35,6 +35,8 @@ It combines:
 - [16) GitHub Actions CI](#16-github-actions-ci)
 - [17) Contributing](#17-contributing)
 - [18) License](#18-license)
+- [19) Deployed Addresses](#19-deployed-addresses)
+- [20) Chainlink Usage](#20-chainlink-usage)
 
 ---
 
@@ -447,5 +449,18 @@ Add these repo secrets before running the manual full simulation workflow:
 
 MIT (or your preferred license). Add a root `LICENSE` file before public release.
 
+---
 
+## 19) Deployed Addresses
 
+- **WorkflowLog (Sepolia):** `0xCCf8B231f32ED84A53b1b29f019fcaFd514C5006`
+
+---
+
+## 20) Chainlink Usage
+
+CRECopilot exclusively builds for, and relies on, the **Chainlink Runtime Environment (CRE)** to deterministically simulate and run AI-generated workflows locally and on-chain.
+
+- **[CRE Simulation Engine (backend/src/routes/generateDirect.ts)](https://github.com/ClawdHQ/cre-copilot/blob/main/backend/src/routes/generateDirect.ts)**: The core integration point where the backend orchestrates secure calls to the `cre-cli` binary using targeted mocked payload triggers like `--http-payload` and `--evm-log-mock`.
+- **[CRE Workspace Sandbox (cre-workflow/)](https://github.com/ClawdHQ/cre-copilot/tree/main/cre-workflow)**: The raw `cre.yaml`, triggers, and capabilities constraints configuration that powers the environment context.
+- **[AST Validator Engine (backend/src/services/validator.ts)](https://github.com/ClawdHQ/cre-copilot/blob/main/backend/src/services/validator.ts)**: Validates exactly how the AI integrates capability calls (like `ctx.ccip` and `ctx.http`) safely for the Chainlink Sandbox.
